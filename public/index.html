@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Quality Assurance MVP</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="brand">BiasBuster Feedback QA</p>
+        <p class="subtitle">AI-assisted, rubric-aligned feedback for higher education.</p>
+      </div>
+      <div class="responsibility">
+        <strong>Marker remains responsible.</strong>
+        <span>AI suggestions are drafts and require human approval before export.</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="column input-column">
+        <div class="card">
+          <h2>Step 1 — Upload &amp; Draft</h2>
+          <p class="muted">
+            Provide the rubric, student submission, and your draft feedback. The
+            system redacts PII before any AI call.
+          </p>
+          <form id="analyze-form">
+            <div class="stack">
+              <label for="rubricText">Rubric (paste)</label>
+              <textarea
+                id="rubricText"
+                name="rubricText"
+                placeholder="Paste rubric criteria here..."
+                rows="5"
+              ></textarea>
+              <label class="file-label" for="rubricFile">Or upload rubric (PDF/DOCX)</label>
+              <input id="rubricFile" name="rubricFile" type="file" />
+            </div>
+
+            <div class="stack">
+              <label for="submissionText">Submission (paste)</label>
+              <textarea
+                id="submissionText"
+                name="submissionText"
+                placeholder="Paste student submission text here..."
+                rows="5"
+              ></textarea>
+              <label class="file-label" for="submissionFile">
+                Or upload submission (PDF/DOCX)
+              </label>
+              <input id="submissionFile" name="submissionFile" type="file" />
+            </div>
+
+            <div class="stack">
+              <label for="feedbackText">Marker draft feedback (paste)</label>
+              <textarea
+                id="feedbackText"
+                name="feedbackText"
+                placeholder="Paste your draft feedback here..."
+                rows="5"
+              ></textarea>
+              <label class="file-label" for="feedbackFile">
+                Or upload feedback doc (DOCX)
+              </label>
+              <input id="feedbackFile" name="feedbackFile" type="file" />
+            </div>
+
+            <div class="stack">
+              <label for="criteriaOverride">Manual criteria list (optional)</label>
+              <textarea
+                id="criteriaOverride"
+                name="criteriaOverride"
+                placeholder="One criterion per line..."
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="toggle-group">
+              <label class="toggle">
+                <input id="evidenceEnabled" type="checkbox" checked />
+                Include evidence quotes from the submission
+              </label>
+              <label class="toggle">
+                <input id="localOnly" type="checkbox" />
+                Local-only mode (no external API calls)
+              </label>
+              <p class="hint">
+                Local-only mode uses a lightweight fallback and may reduce
+                accuracy.
+              </p>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="primary">Analyze feedback quality</button>
+              <span id="status" class="status"></span>
+            </div>
+            <div id="loading" class="loading hidden">
+              <div class="spinner"></div>
+              <div>
+                <div id="loadingText">Analyzing feedback quality…</div>
+                <div id="loadingStep" class="hint">Preparing inputs</div>
+                <div class="loading-meter">
+                  <div class="loading-bar"><span></span></div>
+                  <div id="loadingElapsed" class="hint"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="card accent">
+          <h3>Minimum Feedback Standard</h3>
+          <div id="minimum-standard" class="minimum-standard"></div>
+          <p class="muted">
+            This indicator reflects whether all categories are covered with
+            specific, actionable guidance.
+          </p>
+        </div>
+      </section>
+
+      <section class="column review-column">
+        <div class="card">
+          <h2>Step 2 — Review AI Feedback</h2>
+          <p id="summary" class="summary"></p>
+          <div class="actions">
+            <button id="use-all-btn">Use all AI drafts</button>
+            <button id="clear-all-btn">Clear selections</button>
+          </div>
+          <div id="category-board" class="category-board"></div>
+        </div>
+
+        <div class="card">
+          <h2>AI Full Draft (optional)</h2>
+          <p id="ai-draft-status" class="muted">Awaiting analysis.</p>
+          <pre id="ai-draft" class="ai-draft"></pre>
+        </div>
+
+        <div id="report" class="card hidden">
+          <h2>Step 3 — Finalise &amp; Export</h2>
+          <textarea id="final-feedback" rows="9"></textarea>
+          <p class="hint">
+            Edits here override the auto-built preview. Use the category buttons
+            to rebuild from selections.
+          </p>
+          <div class="actions">
+            <button id="confirm-final" class="primary">Confirm &amp; enable export</button>
+            <button id="copy-btn" disabled>Copy to clipboard</button>
+            <button id="download-btn" disabled>Download .txt</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Audit logs store only hashes, timestamps, and acceptance counts.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
